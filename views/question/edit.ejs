@@ -1,0 +1,56 @@
+<%- include('../partials/header', { title, active }) %>
+
+<div class="mb-3">
+  <h1 class="h3 mb-1">Edit question</h1>
+  <p class="text-muted mb-0">Update question text, options, or correct answer.</p>
+</div>
+
+<form method="POST" action="/questions/<%= question._id %>?_method=PUT" class="card shadow-sm">
+  <input type="hidden" name="_method" value="PUT" />
+  <div class="card-body">
+    <div class="mb-3">
+      <label class="form-label" for="text">Question text</label>
+      <input class="form-control" id="text" name="text" type="text" value="<%= question.text %>" required />
+    </div>
+    <div class="mb-3">
+      <label class="form-label" for="options">Options (comma separated)</label>
+      <input
+        class="form-control"
+        id="options"
+        name="options"
+        type="text"
+        value="<%= question.options ? question.options.join(', ') : '' %>"
+        required
+      />
+    </div>
+    <div class="mb-3">
+      <label class="form-label" for="keywords">Keywords (comma separated)</label>
+      <input
+        class="form-control"
+        id="keywords"
+        name="keywords"
+        type="text"
+        value="<%= question.keywords ? question.keywords.join(', ') : '' %>"
+      />
+    </div>
+    <div class="mb-3">
+      <label class="form-label" for="correctAnswerIndex">Correct answer index (0 = first option)</label>
+      <input
+        class="form-control"
+        id="correctAnswerIndex"
+        name="correctAnswerIndex"
+        type="number"
+        min="0"
+        value="<%= question.correctAnswerIndex %>"
+        required
+      />
+      <div class="form-text">Use 0 for the first option, 1 for the second, and so on.</div>
+    </div>
+    <div class="d-flex gap-2">
+      <button class="btn btn-primary" type="submit">Update</button>
+      <a class="btn btn-outline-secondary" href="/questions/<%= question._id %>">Cancel</a>
+    </div>
+  </div>
+</form>
+
+<%- include('../partials/footer') %>

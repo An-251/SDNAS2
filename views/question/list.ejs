@@ -1,0 +1,58 @@
+<%- include('../partials/header', { title, active }) %>
+
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+  <div>
+    <h1 class="h3 mb-1">Question list</h1>
+    <p class="text-muted mb-0">Maintain your full question bank.</p>
+  </div>
+  <a class="btn btn-primary" href="/questions/new">Create New Question</a>
+</div>
+
+<% if (!questions || questions.length === 0) { %>
+  <div class="alert alert-info">No questions yet. Add your first question to get started.</div>
+<% } else { %>
+  <div class="table-responsive">
+    <table class="table table-hover align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Question</th>
+          <th>Options</th>
+          <th>In quizzes</th>
+          <th>Correct index</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% questions.forEach((question) => { %>
+          <tr>
+            <td class="fw-semibold">
+              <a class="text-decoration-none" href="/questions/<%= question._id %>"><%= question.text %></a>
+            </td>
+            <td><%= question.options ? question.options.length : 0 %></td>
+            <td>
+              <% if (question.quizTitles && question.quizTitles.length > 0) { %>
+                <span class="text-muted"><%= question.quizTitles.join(', ') %></span>
+              <% } else { %>
+                <span class="text-muted">Unassigned</span>
+              <% } %>
+            </td>
+            <td><%= question.correctAnswerIndex %></td>
+            <td class="text-end">
+              <div class="d-inline-flex gap-2">
+                <a class="btn btn-sm btn-outline-secondary" href="/questions/<%= question._id %>">View</a>
+                <a class="btn btn-sm btn-outline-primary" href="/questions/<%= question._id %>/try">Try</a>
+                <a class="btn btn-sm btn-outline-warning" href="/questions/<%= question._id %>/edit">Edit</a>
+                <form method="POST" action="/questions/<%= question._id %>?_method=DELETE" onsubmit="return confirm('Delete this question?');">
+                  <input type="hidden" name="_method" value="DELETE" />
+                  <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+<% } %>
+
+<%- include('../partials/footer') %>

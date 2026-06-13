@@ -1,0 +1,56 @@
+<%- include('../partials/header', { title, active }) %>
+
+<div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+  <div>
+    <h1 class="h3 mb-1">Try question</h1>
+    <p class="text-muted mb-0"><%= question.text %></p>
+  </div>
+  <div class="d-flex flex-wrap gap-2">
+    <a class="btn btn-outline-secondary" href="/questions">Back</a>
+    <a class="btn btn-outline-warning" href="/questions/<%= question._id %>/edit">Edit</a>
+  </div>
+</div>
+
+<form method="POST" action="/questions/<%= question._id %>/try" class="card shadow-sm">
+  <div class="card-body">
+    <h2 class="h5">Choose an answer</h2>
+    <div class="list-group">
+      <% (question.options || []).forEach((option, index) => { %>
+        <label class="list-group-item d-flex align-items-start gap-2">
+          <input
+            class="form-check-input mt-1"
+            type="radio"
+            name="answerIndex"
+            value="<%= index %>"
+            <%= result && result.answerIndex === index ? 'checked' : '' %>
+          />
+          <span><%= option %></span>
+          <% if (result) { %>
+            <% if (index === question.correctAnswerIndex) { %>
+              <span class="badge bg-success ms-auto">Correct</span>
+            <% } else if (result.answerIndex === index) { %>
+              <span class="badge bg-danger ms-auto">Your answer</span>
+            <% } %>
+          <% } %>
+        </label>
+      <% }) %>
+    </div>
+
+    <% if (result) { %>
+      <div class="alert <%= result.isCorrect ? 'alert-success' : 'alert-danger' %> mt-3">
+        <%= result.isCorrect ? 'Correct answer.' : 'Not correct yet.' %>
+        <% const correctText = question.options && question.options[question.correctAnswerIndex]; %>
+        <% if (correctText) { %>
+          Correct answer: <%= correctText %>
+        <% } %>
+      </div>
+    <% } %>
+
+    <div class="d-flex flex-wrap gap-2 mt-3">
+      <button class="btn btn-primary" type="submit">Check answer</button>
+      <a class="btn btn-outline-secondary" href="/questions/<%= question._id %>">View details</a>
+    </div>
+  </div>
+</form>
+
+<%- include('../partials/footer') %>

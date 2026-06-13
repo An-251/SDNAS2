@@ -1,0 +1,67 @@
+<%- include('../partials/header', { title, active }) %>
+
+<div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+  <div>
+    <h1 class="h3 mb-1"><%= quiz.title %></h1>
+    <p class="text-muted mb-0"><%= quiz.description || 'No description available.' %></p>
+  </div>
+  <div class="d-flex flex-wrap gap-2">
+    <a class="btn btn-outline-secondary" href="/quizzes">Back</a>
+    <a class="btn btn-outline-warning" href="/quizzes/<%= quiz._id %>/edit">Edit</a>
+    <form method="POST" action="/quizzes/<%= quiz._id %>?_method=DELETE" onsubmit="return confirm('Delete this quiz?');">
+      <input type="hidden" name="_method" value="DELETE" />
+      <button class="btn btn-outline-danger" type="submit">Delete</button>
+    </form>
+  </div>
+</div>
+
+<section class="mb-4">
+  <h2 class="h5">Questions</h2>
+  <% if (!quiz.questions || quiz.questions.length === 0) { %>
+    <div class="alert alert-info">No questions in this quiz yet.</div>
+  <% } else { %>
+    <div class="list-group">
+      <% quiz.questions.forEach((question) => { %>
+        <div class="list-group-item d-flex flex-wrap justify-content-between align-items-center gap-2">
+          <div>
+            <div class="fw-semibold"><%= question.text %></div>
+            <small class="text-muted">Options: <%= question.options ? question.options.length : 0 %></small>
+          </div>
+          <div class="d-flex gap-2">
+            <a class="btn btn-sm btn-outline-secondary" href="/questions/<%= question._id %>">Details</a>
+            <a class="btn btn-sm btn-outline-primary" href="/questions/<%= question._id %>/try">Try</a>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+</section>
+
+<section class="card shadow-sm">
+  <div class="card-body">
+    <h3 class="h5">Add existing question</h3>
+    <% if (!availableQuestions || availableQuestions.length === 0) { %>
+      <div class="alert alert-info mb-0">
+        No available questions to add. <a href="/questions/new">Create a question</a> first.
+      </div>
+    <% } else { %>
+      <form method="POST" action="/quizzes/<%= quiz._id %>/questions" class="row g-3 align-items-end">
+        <div class="col-md-9">
+          <label class="form-label" for="questionId">Select a question</label>
+          <select class="form-select" id="questionId" name="questionId" required>
+            <option value="" disabled selected>Choose a question</option>
+            <% availableQuestions.forEach((question) => { %>
+              <option value="<%= question._id %>"><%= question.text %></option>
+            <% }) %>
+          </select>
+          <div class="form-text">Questions are managed in the question bank.</div>
+        </div>
+        <div class="col-md-3">
+          <button class="btn btn-primary w-100" type="submit">Add to Quiz</button>
+        </div>
+      </form>
+    <% } %>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

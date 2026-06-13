@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("MONGO_URL")
+}
+
+model Quiz {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String   @default("")
+  questions   String[]
+
+  @@map("quizzes")
+}
+
+model Question {
+  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
+  text               String
+  options            String[]
+  keywords           String[]
+  correctAnswerIndex Int
+
+  @@map("questions")
+}

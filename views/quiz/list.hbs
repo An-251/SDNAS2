@@ -1,0 +1,45 @@
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+  <div>
+    <h1 class="h3 mb-1">Quiz list</h1>
+    <p class="text-muted mb-0">Manage quizzes and review question counts.</p>
+  </div>
+  <a class="btn btn-primary" href="/quizzes/new">Create New Quiz</a>
+</div>
+
+{{#if quizzes.length}}
+  <div class="table-responsive">
+    <table class="table table-hover align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Questions</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each quizzes}}
+          <tr>
+            <td>
+              <a class="fw-semibold text-decoration-none" href="/quizzes/{{_id}}">{{title}}</a>
+            </td>
+            <td class="text-muted">{{description}}</td>
+            <td>{{questionCount}}</td>
+            <td class="text-end">
+              <div class="d-inline-flex gap-2">
+                <a class="btn btn-sm btn-outline-secondary" href="/quizzes/{{_id}}">View</a>
+                <a class="btn btn-sm btn-outline-warning" href="/quizzes/{{_id}}/edit">Edit</a>
+                <form method="POST" action="/quizzes/{{_id}}?_method=DELETE" onsubmit="return confirm('Delete this quiz?');">
+                  <input type="hidden" name="_method" value="DELETE" />
+                  <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+{{else}}
+  <div class="alert alert-info">No quizzes yet. Create your first quiz to get started.</div>
+{{/if}}
